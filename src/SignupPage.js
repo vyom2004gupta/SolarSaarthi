@@ -2,8 +2,9 @@ import { useState } from "react";
 import "./SignupPage.css";
 import "@supabase/supabase-js";
 import { supabase } from "./supabase/supabaseClient.js";
+import { useNavigate } from "react-router-dom";
 
-function SignupPage() {
+function SignupPage({ onBackToOptions }) {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -12,8 +13,11 @@ function SignupPage() {
     password: "",
     confirmPassword: "",
   });
+
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
+  const navigate=useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -56,20 +60,17 @@ function SignupPage() {
     e.preventDefault();
     setLoading(true);
 
-    // Validate all fields
     const newErrors = {};
     Object.keys(formData).forEach((key) => {
       newErrors[key] = validateField(key, formData[key]);
     });
     setErrors(newErrors);
 
-    // Check if there are any errors
     if (!Object.values(newErrors).every((error) => error === "")) {
       setLoading(false);
       return;
     }
 
-    // 1. Call Supabase to sign up
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email: formData.email.trim(),
       password: formData.password,
@@ -79,7 +80,7 @@ function SignupPage() {
           last_name: formData.lastName,
           mobile: formData.mobileNumber,
         },
-        emailRedirectTo: "http://localhost:3000/auth/callback"
+        emailRedirectTo: "http://localhost:3000/auth/callback",
       },
     });
 
@@ -89,24 +90,23 @@ function SignupPage() {
       return;
     }
 
-    localStorage.setItem("profileData", JSON.stringify({
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      mobileNumber: formData.mobileNumber
-    }));
-    
+    localStorage.setItem(
+      "profileData",
+      JSON.stringify({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        mobileNumber: formData.mobileNumber,
+      })
+    );
 
-    // Inform user to check email if confirmation is required
     alert("Signup successful! Check your email to confirm.");
 
-    // 2. Retrieve the session token (if immediate login is enabled)
     const sessionResponse = await supabase.auth.getSession();
     const session = sessionResponse.data.session;
-    
+
     if (session) {
       const token = session.access_token;
-      
-      // 3. Call FastAPI backend to save user data
+
       try {
         const response = await fetch("http://localhost:8000/api/save-user", {
           method: "POST",
@@ -118,9 +118,10 @@ function SignupPage() {
             firstName: formData.firstName,
             lastName: formData.lastName,
             mobileNumber: formData.mobileNumber,
+            password: formData.password,
           }),
         });
-        
+
         if (!response.ok) {
           const errorData = await response.json();
           alert("Backend error: " + errorData.detail);
@@ -139,15 +140,20 @@ function SignupPage() {
   return (
     <div className="signup-container">
       <div className="image-container">
-        <img src="/images/signupimage.webp" alt="Modern home at night" className="home-image" />
+        <img
+          src="/images/signupimage.webp"
+          alt="Modern home at night"
+          className="home-image"
+        />
       </div>
 
       <div className="form-container">
         <div className="form-content">
           <h1 className="form-title">Set up your account</h1>
           <p className="form-subtitle">Join us today and unlock the world of solar!</p>
-          
+
           <form className="signup-form" onSubmit={handleSubmit}>
+            {/* First Name */}
             <div className="form-field">
               <input
                 type="text"
@@ -161,6 +167,7 @@ function SignupPage() {
               {errors.firstName && <p className="error-text">{errors.firstName}</p>}
             </div>
 
+            {/* Last Name */}
             <div className="form-field">
               <input
                 type="text"
@@ -174,6 +181,7 @@ function SignupPage() {
               {errors.lastName && <p className="error-text">{errors.lastName}</p>}
             </div>
 
+            {/* Mobile Number */}
             <div className="form-field">
               <input
                 type="tel"
@@ -187,6 +195,7 @@ function SignupPage() {
               {errors.mobileNumber && <p className="error-text">{errors.mobileNumber}</p>}
             </div>
 
+            {/* Email */}
             <div className="form-field">
               <input
                 type="email"
@@ -200,6 +209,7 @@ function SignupPage() {
               {errors.email && <p className="error-text">{errors.email}</p>}
             </div>
 
+            {/* Password */}
             <div className="form-field">
               <input
                 type="password"
@@ -213,6 +223,7 @@ function SignupPage() {
               {errors.password && <p className="error-text">{errors.password}</p>}
             </div>
 
+            {/* Confirm Password */}
             <div className="form-field">
               <input
                 type="password"
@@ -226,17 +237,31 @@ function SignupPage() {
               {errors.confirmPassword && <p className="error-text">{errors.confirmPassword}</p>}
             </div>
 
+            {/* Checkbox */}
             <div className="checkbox-container">
-              <input type="checkbox" id="confirmPasswordCheck" className="form-checkbox" />
+              <input
+                type="checkbox"
+                id="confirmPasswordCheck"
+                className="form-checkbox"
+              />
               <label htmlFor="confirmPasswordCheck" className="checkbox-label">
                 Confirm Password
               </label>
             </div>
 
+            {/* Submit Button */}
             <button type="submit" className="submit-button" disabled={loading}>
               {loading ? "Signing up..." : "Continue"}
             </button>
           </form>
+
+          {/* Back to Options Button */}
+          <div className="back-option">
+            <button className="back-button" onClick={() => navigate("/")}>
+              Back to options
+            </button>
+          </div>
+
         </div>
       </div>
     </div>

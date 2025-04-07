@@ -38,6 +38,7 @@ class UserProfile(BaseModel):
     firstName: str
     lastName: str
     mobileNumber: str
+    password: str
 
 
 def get_current_user(authorization: Optional[str] = Header(None)):
@@ -76,13 +77,14 @@ def save_user(profile: UserProfile, user_id: str = Depends(get_current_user)):
         cursor = conn.cursor()
 
         cursor.execute("""
-            INSERT INTO profiles (id, first_name, last_name, number)
-            VALUES (%s, %s, %s, %s)
+            INSERT INTO profiles (id, first_name, last_name, number, password)
+            VALUES (%s, %s, %s, %s, %s)
             ON CONFLICT (id) DO UPDATE SET
                 first_name = EXCLUDED.first_name,
                 last_name = EXCLUDED.last_name,
-                number = EXCLUDED.number;
-        """, (user_id, profile.firstName, profile.lastName, profile.mobileNumber))
+                number = EXCLUDED.number,
+                password = EXCLUDED.number;
+        """, (user_id, profile.firstName, profile.lastName, profile.mobileNumber,profile.password))
 
         conn.commit()
         cursor.close()
