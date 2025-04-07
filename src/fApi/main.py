@@ -1,14 +1,13 @@
-from fastapi import FastAPI, Header, HTTPException, Depends
-from pydantic import BaseModel
+from fastapi import FastAPI, Header, HTTPException, Depends # type: ignore
+from pydantic import BaseModel # type: ignore
 from typing import Optional
 import os
-from dotenv import load_dotenv
-import jwt  # PyJWT
-import psycopg2
-from fastapi.middleware.cors import CORSMiddleware
-from jose import jwt, jwk
-from jose.utils import base64url_decode
-import requests
+from dotenv import load_dotenv # type: ignore
+import jwt  # type: ignore # PyJWT
+import psycopg2 # type: ignore
+from fastapi.middleware.cors import CORSMiddleware # type: ignore
+from jose import jwt, jwk # type: ignore
+from jose.utils import base64url_decode # type: ignore
 
 app = FastAPI()
 
@@ -38,6 +37,7 @@ class UserProfile(BaseModel):
     firstName: str
     lastName: str
     mobileNumber: str
+    password: str
 
 
 def get_current_user(authorization: Optional[str] = Header(None)):
@@ -51,7 +51,7 @@ def get_current_user(authorization: Optional[str] = Header(None)):
             token,
             SUPABASE_JWT_SECRET,
             algorithms=["HS256"],
-            audience="authenticated",  # or whatever your Supabase token's `aud` is
+            audience="authenticated",  # or whatever your Supabase token's aud is
         )
 
         print("Decoded token payload:", payload)
@@ -76,13 +76,14 @@ def save_user(profile: UserProfile, user_id: str = Depends(get_current_user)):
         cursor = conn.cursor()
 
         cursor.execute("""
-            INSERT INTO profiles (id, first_name, last_name, number)
-            VALUES (%s, %s, %s, %s)
+            INSERT INTO profiles (id, first_name, last_name, number, password)
+            VALUES (%s, %s, %s, %s, %s)
             ON CONFLICT (id) DO UPDATE SET
                 first_name = EXCLUDED.first_name,
                 last_name = EXCLUDED.last_name,
-                number = EXCLUDED.number;
-        """, (user_id, profile.firstName, profile.lastName, profile.mobileNumber))
+                number = EXCLUDED.number,
+                password = EXCLUDED.number;
+        """, (user_id, profile.firstName, profile.lastName, profile.mobileNumber,profile.password))
 
         conn.commit()
         cursor.close()

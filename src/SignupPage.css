@@ -124,5 +124,22 @@
     font-size: 0.875rem;
     margin-top: 0.25rem;
   }
-  
-  
+  /* Back button styling */
+.back-option {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.back-button {
+  background-color: transparent;
+  border: none;
+  color: #3b82f6;
+  cursor: pointer;
+  font-size: 0.875rem;
+  text-decoration: underline;
+  padding: 0.5rem;
+}
+
+.back-button:hover {
+  color: #2563eb;
+}
