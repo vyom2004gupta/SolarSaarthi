@@ -1,15 +1,32 @@
 import { useNavigate } from "react-router-dom";
 import "./SignupOptions.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGoogle, faApple } from "@fortawesome/free-brands-svg-icons";
+import { supabase } from "./supabase/supabaseClient.js";
 
 function SignupOptions() {
   const navigate = useNavigate();
 
   // Handle social signup
-  const handleSocialSignup = (provider) => {
-    alert(`Signup with ${provider} initiated`);
-    // Implement actual signup logic here later
+  const handleSocialSignup = async (provider) => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: provider.toLowerCase(),
+        options: {
+          redirectTo: 'http://localhost:3000/auth/callback',
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      if (error) {
+        console.error(`Error signing in with ${provider}:`, error.message);
+        alert(`Failed to sign in with ${provider}: ${error.message}`);
+      }
+    } catch (error) {
+      console.error(`Unexpected error during ${provider} sign-in:`, error);
+      alert(`Something went wrong with ${provider} sign-in. Please try again.`);
+    }
   };
 
   // Navigate to login page
@@ -41,21 +58,21 @@ function SignupOptions() {
 
           {/* Social Signup Buttons */}
           <div className="social-signup-container">
-          <button
-            className="social-signup-button google-button"
-            onClick={() => handleSocialSignup("Google")}
->
-          <img src="/images/search.png" alt="Google icon" className="social-icon-img google-icon-img" />
-            Sign up with Google
-          </button>
+            <button
+              className="social-signup-button google-button"
+              onClick={() => handleSocialSignup("Google")}
+            >
+              <img src="/images/search.png" alt="Google icon" className="social-icon-img google-icon-img" />
+              Sign up with Google
+            </button>
 
-          <button
-            className="social-signup-button apple-button"
-            onClick={() => handleSocialSignup("Apple")}
->
-          <img src="/images/apple.png" alt="Google icon" className="social-icon-img apple-icon-img" />
-            Sign up with Apple
-          </button>
+            <button
+              className="social-signup-button facebook-button"
+              onClick={() => handleSocialSignup("Facebook")}
+            >
+              <img src="/images/facebook.png" alt="Facebook icon" className="social-icon-img facebook-icon-img" />
+              Sign up with Facebook
+            </button>
           </div>
 
           <div className="divider">
