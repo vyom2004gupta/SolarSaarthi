@@ -1,9 +1,8 @@
 import { useState } from "react";
-import "./SignupPage.css";
 import { supabase } from "./supabase/supabaseClient.js";
 import { useNavigate } from "react-router-dom";
 
-function SignupPage({ onBackToOptions }) {
+function SignupPage() {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -137,123 +136,134 @@ function SignupPage({ onBackToOptions }) {
   };
 
   return (
-    <div className="signup-container">
-      <div className="image-container">
+    <div className="flex min-h-screen font-sans">
+      {/* Left side - Image */}
+      <div className="hidden md:block w-1/2 relative">
         <img
           src="/images/signupimage.webp"
           alt="Modern home at night"
-          className="home-image"
+          className="w-full h-full object-cover absolute"
         />
       </div>
 
-      <div className="form-container">
-        <div className="form-content">
-          <h1 className="form-title">Set up your account</h1>
-          <p className="form-subtitle">Join us today and unlock the world of solar!</p>
+      {/* Right side - Form */}
+      <div className="w-full md:w-1/2 bg-black text-white p-8 flex flex-col justify-center">
+        <div className="max-w-md mx-auto w-full">
+          <h1 className="text-3xl font-bold mb-2">Set up your account</h1>
+          <p className="text-gray-400 mb-8">Join us today and unlock the world of solar!</p>
 
-          <form className="signup-form" onSubmit={handleSubmit}>
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             {/* First Name */}
-            <div className="form-field">
+            <div className="mb-2">
               <input
                 type="text"
                 id="firstName"
                 placeholder="First Name"
-                className="form-input"
+                className="w-full h-12 px-4 py-3 bg-transparent border border-gray-700 rounded-md text-white text-base"
                 value={formData.firstName}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
-              {errors.firstName && <p className="error-text">{errors.firstName}</p>}
+              {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
             </div>
 
             {/* Last Name */}
-            <div className="form-field">
+            <div className="mb-2">
               <input
                 type="text"
                 id="lastName"
                 placeholder="Last Name"
-                className="form-input"
+                className="w-full h-12 px-4 py-3 bg-transparent border border-gray-700 rounded-md text-white text-base"
                 value={formData.lastName}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
-              {errors.lastName && <p className="error-text">{errors.lastName}</p>}
+              {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
             </div>
 
             {/* Mobile Number */}
-            <div className="form-field">
+            <div className="mb-2">
               <input
                 type="tel"
                 id="mobileNumber"
                 placeholder="Mobile Number"
-                className="form-input"
+                className="w-full h-12 px-4 py-3 bg-transparent border border-gray-700 rounded-md text-white text-base"
                 value={formData.mobileNumber}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
-              {errors.mobileNumber && <p className="error-text">{errors.mobileNumber}</p>}
+              {errors.mobileNumber && <p className="text-red-500 text-sm mt-1">{errors.mobileNumber}</p>}
             </div>
 
             {/* Email */}
-            <div className="form-field">
+            <div className="mb-2">
               <input
                 type="email"
                 id="email"
                 placeholder="Email Address"
-                className="form-input"
+                className="w-full h-12 px-4 py-3 bg-transparent border border-gray-700 rounded-md text-white text-base"
                 value={formData.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
-              {errors.email && <p className="error-text">{errors.email}</p>}
+              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
             </div>
 
             {/* Password */}
-            <div className="form-field">
+            <div className="mb-2">
               <input
                 type="password"
                 id="password"
                 placeholder="Password"
-                className="form-input"
+                className="w-full h-12 px-4 py-3 bg-transparent border border-gray-700 rounded-md text-white text-base"
                 value={formData.password}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
-              {errors.password && <p className="error-text">{errors.password}</p>}
+              {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
             </div>
 
             {/* Confirm Password */}
-            <div className="form-field">
+            <div className="mb-2">
               <input
                 type="password"
                 id="confirmPassword"
                 placeholder="Confirm Password"
-                className="form-input"
+                className="w-full h-12 px-4 py-3 bg-transparent border border-gray-700 rounded-md text-white text-base"
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
-              {errors.confirmPassword && <p className="error-text">{errors.confirmPassword}</p>}
+              {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
             </div>
-            <div className="checkbox-container">
+            
+            <div className="flex items-center gap-2 my-2">
               <input
                 type="checkbox"
                 id="confirmPasswordCheck"
-                className="form-checkbox"
+                className="w-4 h-4 border border-gray-600 rounded"
               />
-              <label htmlFor="confirmPasswordCheck" className="checkbox-label">
+              <label htmlFor="confirmPasswordCheck" className="text-gray-400 text-sm">
                 Confirm Password
               </label>
-            </div>
+            </div>
+            
             {/* Submit Button */}
-            <button type="submit" className="submit-button" disabled={loading}>
+            <button 
+              type="submit" 
+              className="w-full h-12 bg-blue-500 text-white border-none rounded-md text-base font-medium cursor-pointer mt-2 hover:bg-blue-600 transition-colors"
+              disabled={loading}
+            >
               {loading ? "Signing up..." : "Continue"}
             </button>
           </form>
 
           {/* Back to Options Button */}
-          <div className="back-option">
-            <button className="back-button" onClick={() => navigate("/")}>
+          <div className="mt-6 text-center">
+            <button 
+              className="bg-transparent border-none text-blue-500 cursor-pointer text-sm underline p-2 hover:text-blue-600"
+              onClick={() => navigate("/")}
+            >
               Back to options
             </button>
           </div>

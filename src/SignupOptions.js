@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import "./SignupOptions.css";
 import { supabase } from "./supabase/supabaseClient.js";
 
 function SignupOptions() {
@@ -40,61 +39,81 @@ function SignupOptions() {
   };
 
   return (
-    <div className="signup-options-container">
+    <div className="flex min-h-screen font-sans">
       {/* Left side - Image */}
-      <div className="image-container">
-        <img src="/images/SignupOptionsimage.jpg" alt="Scenery" className="home-image" />
+      <div className="hidden md:block w-1/2 relative">
+        <img 
+          src="/images/SignupOptionsimage.jpg" 
+          alt="Scenery" 
+          className="w-full h-full object-cover absolute"
+        />
       </div>
 
       {/* Right side - Options */}
-      <div className="options-container">
-        <div className="options-content">
-          <div className="logo-circle"></div>
-          <div className="logo-container">
-            <h1 className="company-name">SolarSaarthi</h1>
+      <div className="w-full md:w-1/2 bg-white text-black p-8 flex flex-col justify-center">
+        <div className="max-w-md mx-auto w-full">
+          <div className="w-8 h-8 bg-gray-300 rounded-full mb-2 mr-3"></div>
+          <div className="flex items-center">
+            <h1 className="text-5xl font-bold font-poppins">SolarSaarthi</h1>
           </div>
 
-          <p className="join-subtitle">Join us today</p>
+          <p className="text-4xl text-gray-400 mb-8 font-poppins">Join us today</p>
 
           {/* Social Signup Buttons */}
-          <div className="social-signup-container">
+          <div className="flex flex-col gap-4 mb-6">
             <button
-              className="social-signup-button google-button"
+              className="flex items-center justify-center gap-2.5 w-full h-12 rounded-full text-base font-medium border border-gray-600 bg-transparent text-black hover:bg-gray-100 transition-colors"
               onClick={() => handleSocialSignup("Google")}
             >
-              <img src="/images/search.png" alt="Google icon" className="social-icon-img google-icon-img" />
+              <img 
+                src="/images/search.png" 
+                alt="Google icon" 
+                className="w-5 h-5 object-contain -ml-6 mr-4" 
+              />
               Sign up with Google
             </button>
 
             <button
-              className="social-signup-button facebook-button"
+              className="flex items-center justify-center gap-2.5 w-full h-12 rounded-full text-base font-medium border border-gray-600 bg-transparent text-black hover:bg-gray-100 transition-colors"
               onClick={() => handleSocialSignup("Facebook")}
             >
-              <img src="/images/facebook.png" alt="Facebook icon" className="social-icon-img facebook-icon-img" />
+              <img 
+                src="/images/facebook.png" 
+                alt="Facebook icon" 
+                className="w-6 h-6 object-contain -ml-3 mr-3" 
+              />
               Sign up with Facebook
             </button>
           </div>
 
-          <div className="divider">
-            <span className="divider-text">OR</span>
+          <div className="flex items-center my-6 text-gray-400">
+            <div className="flex-1 border-b border-gray-600"></div>
+            <span className="px-4 text-sm font-poppins">OR</span>
+            <div className="flex-1 border-b border-gray-600"></div>
           </div>
 
           {/* Email/Phone Signup Button */}
-          <button className="email-signup-button" onClick={navigateToSignup}>
+          <button 
+            className="w-full h-12 bg-black text-white rounded-full text-base font-medium border border-gray-600 mb-6 hover:bg-opacity-80 transition-colors font-poppins"
+            onClick={navigateToSignup}
+          >
             Sign up with phone or email
           </button>
 
           {/* Terms Agreement */}
-          <p className="terms-text">
+          <p className="text-xs text-gray-400 my-6 text-center font-poppins">
             By signing up, you agree to the{" "}
-            <a href="#" className="terms-link">Terms of Service</a> and{" "}
-            <a href="#" className="terms-link">Privacy Policy</a>, including cookie use.
+            <a href="#" className="text-blue-500 hover:underline">Terms of Service</a> and{" "}
+            <a href="#" className="text-blue-500 hover:underline">Privacy Policy</a>, including cookie use.
           </p>
 
           {/* Already have account */}
-          <div className="account-prompt">
-            <p>Already have an account?</p>
-            <button className="login-button" onClick={navigateToLogin}>
+          <div className="flex flex-col items-center mt-6 gap-3">
+            <p className="text-sm text-gray-400">Already have an account?</p>
+            <button 
+              className="w-full h-12 bg-transparent text-black border border-gray-600 rounded-full text-base font-medium hover:bg-gray-100 transition-colors font-poppins"
+              onClick={navigateToLogin}
+            >
               Log in
             </button>
           </div>
