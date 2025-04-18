@@ -11,8 +11,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<ChatBotPage />} />
-        {/* <Route path="/" element={<SignupOptions />} /> */}
+        {/* <Route path="/" element={<ChatBotPage />} /> */}
+        <Route path="/" element={<SignupOptions />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/login" element={<LoginPage />} />
